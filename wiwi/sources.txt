@@ -1,0 +1,9 @@
+C:\Users\lukeh\git\Wiwi\wiwi\src\main\java\module-info.java
+C:\Users\lukeh\git\Wiwi\wiwi\src\main\java\net\heydel\App.java
+C:\Users\lukeh\git\Wiwi\wiwi\src\main\java\net\heydel\CsvColumn.java
+C:\Users\lukeh\git\Wiwi\wiwi\src\main\java\net\heydel\CsvColumnProperties.java
+C:\Users\lukeh\git\Wiwi\wiwi\src\main\java\net\heydel\CsvColumnSatz.java
+C:\Users\lukeh\git\Wiwi\wiwi\src\main\java\net\heydel\CsvReader.java
+C:\Users\lukeh\git\Wiwi\wiwi\src\main\java\net\heydel\CsvResult.java
+C:\Users\lukeh\git\Wiwi\wiwi\src\main\java\net\heydel\MainController.java
+C:\Users\lukeh\git\Wiwi\wiwi\src\main\java\net\heydel\TabHelper.java
