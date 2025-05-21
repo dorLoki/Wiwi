@@ -23,7 +23,7 @@ public class CsvReader {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             if ((line = br.readLine()) != null) {
-                if (line.equals("﻿Nr;Bezeichnung;KS (€/h)")) {
+                if (line.equals("Maschine;Datum;Beginn der Fertigung;Ende der Fertigung")) {
                     List<CsvColumn> records = new ArrayList<>();
                     while ((line = br.readLine()) != null) {
                         parseCsvLine(records, line);
