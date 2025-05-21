@@ -28,7 +28,7 @@ public class MainController {
     private MenuItem menuOpen;
     @FXML
     private MenuItem menuClose;
-  
+
     @FXML
     private MenuItem menuQuit;
     @FXML
@@ -201,11 +201,12 @@ public class MainController {
         result.put("EndDate", endDatePicker.getValue());
         return result;
     }
+
     private void calc(HashMap<String, Object> result) {
         // Berechnung durchführen
         Date startDate = null;
         Date endDate = null;
-        switch((String)result.get("Zeitraum")){
+        switch ((String) result.get("Zeitraum")) {
             case "Jahr":
                 int i = (int) result.get("Year");
                 Calendar cal = Calendar.getInstance();
@@ -217,7 +218,7 @@ public class MainController {
                 break;
             case "Quartal":
                 int year = (int) result.get("Year");
-                switch ((String) result.get("Quarter")){
+                switch ((String) result.get("Quarter")) {
                     case "1. Quartal":
                         Calendar cal1 = Calendar.getInstance();
                         cal1.set(Calendar.YEAR, year);
@@ -263,7 +264,7 @@ public class MainController {
             case "Monat":
                 int year2 = (int) result.get("Year");
                 int month = 0;
-                switch ((String) result.get("Month")){
+                switch ((String) result.get("Month")) {
                     case "Januar":
                         month = Calendar.JANUARY;
                         break;
@@ -324,37 +325,38 @@ public class MainController {
     }
 
     private void calculate(Date startDate, Date endDate, List<CsvColumnSatz> saetze, List<CsvColumn> istDaten) {
-        //check null
-        if(startDate == null || endDate == null || saetze == null || istDaten == null){
-            //TODO error message
+        // check null
+        if (startDate == null || endDate == null || saetze == null || istDaten == null) {
+            // TODO error message
             return;
         }
         // map für saetze
         HashMap<Integer, Double> saetzeMap = new HashMap<>();
         saetze.forEach(s -> saetzeMap.put(s.getMaschinenNr(), s.getKostensatz()));
         // istDaten filtern
-       
+
         List<CsvColumn> filteredIstDaten = new ArrayList<>();
-        for(var i : istDaten){
-            if(i.getBeginnDerFertigung().after(startDate) && i.getEndeDerFertigung().before(endDate)){
+        for (var i : istDaten) {
+            if (i.getBeginnDerFertigung().after(startDate) && i.getEndeDerFertigung().before(endDate)) {
                 filteredIstDaten.add(i);
             }
         }
         List<CsvResult> results = new ArrayList<>();
         // berechnung
-        for(var i : saetzeMap.keySet()){
+        for (var i : saetzeMap.keySet()) {
             int maschineNr = i;
-            long gesamtdauer = 0;
+            double gesamtdauer = 0;
             double kostensatz = saetzeMap.get(maschineNr);
-            for(var j : filteredIstDaten){
-                if(j.getMaschine()==maschineNr){
+            for (var j : filteredIstDaten) {
+                if (j.getMaschine() == maschineNr) {
                     gesamtdauer += j.getEndeDerFertigung().getTime() - j.getBeginnDerFertigung().getTime();
                 }
             }
             double gesamtkosten = gesamtdauer * kostensatz / 1000 / 60 / 60;
             // round to 2 decimal places
             gesamtkosten = Math.round(gesamtkosten * 100.0) / 100.0;
-            double gesamtdauerStunden = (double)(gesamtdauer / 1000 / 60 / 60);
+            double gesamtdauerStunden = (double) (gesamtdauer / 1000 / 60 / 60);
+            gesamtdauerStunden = Math.round(gesamtdauerStunden * 100.0) / 100.0;
             CsvResult res = new CsvResult(maschineNr, gesamtkosten, gesamtdauerStunden);
             results.add(res);
         }
