@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -23,15 +22,15 @@ public class CsvReader {
     public List<?> readCsv() {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            if((line = br.readLine()) != null) {
-                if(line.equals("Maschine;Datum;Beginn der Fertigung;Ende der Fertigung")){
+            if ((line = br.readLine()) != null) {
+                if (line.equals("﻿Nr;Bezeichnung;KS (€/h)")) {
                     List<CsvColumn> records = new ArrayList<>();
                     while ((line = br.readLine()) != null) {
                         parseCsvLine(records, line);
                     }
                     return records;
                 }
-                if(line.equals("Maschinen-Nr.;Kostensatz")){
+                if (line.equals("Nr;Bezeichnung;KS (€/h)")) {
                     List<CsvColumnSatz> records = new ArrayList<>();
                     while ((line = br.readLine()) != null) {
                         parseCsvSatz(records, line);
@@ -39,7 +38,7 @@ public class CsvReader {
                     return records;
                 }
             }
-            
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,9 +47,10 @@ public class CsvReader {
 
     private void parseCsvSatz(List<CsvColumnSatz> records, String line) {
         String[] values = line.split(";");
-        if (values.length >= 2) {
+        if (values.length >= 3) {
             try {
-                CsvColumnSatz column = new CsvColumnSatz(Integer.parseInt(values[0]), Double.parseDouble(values[1]));
+                CsvColumnSatz column = new CsvColumnSatz(Integer.parseInt(values[0]), values[1],
+                        Double.parseDouble(values[2]));
                 records.add(column);
             } catch (NumberFormatException e) {
                 System.err.println("Fehler beim Parsen der Daten: " + e.getMessage());
@@ -64,10 +64,10 @@ public class CsvReader {
             try {
                 Date datum = dateFormat.parse(values[1]);
                 Date beginn = timeFormat.parse(values[2]);
-                //add datum + beginn to get the correct date
+                // add datum + beginn to get the correct date
                 Date beginnDate = new Date(datum.getTime() + beginn.getTime());
                 Date ende = timeFormat.parse(values[3]);
-                //add datum + ende to get the correct date
+                // add datum + ende to get the correct date
                 Date endeDate = new Date(datum.getTime() + ende.getTime());
                 CsvColumn column = new CsvColumn(Integer.parseInt(values[0]), beginnDate, endeDate);
                 records.add(column);

@@ -59,15 +59,22 @@ public class TabHelper {
         Tab tab = new Tab(tabTitle);
         TableView<CsvColumnSatz> tableView = new TableView<>();
         tableView.setItems(javafx.collections.FXCollections.observableArrayList(data));
+
         TableColumn<CsvColumnSatz, Integer> maschineNrColumn = new TableColumn<>("Maschinen-Nr.");
         maschineNrColumn.setCellValueFactory(new PropertyValueFactory<>("maschinenNr"));
+
+        TableColumn<CsvColumnSatz, String> maschineBez = new TableColumn<>("Bezeichnung");
+        maschineBez.setCellValueFactory(new PropertyValueFactory<>("bezeichnung"));
+
         TableColumn<CsvColumnSatz, Double> kostensatzColumn = new TableColumn<>("Kostensatz");
         kostensatzColumn.setCellValueFactory(new PropertyValueFactory<>("kostensatz"));
-        tableView.getColumns().addAll(maschineNrColumn, kostensatzColumn);
+
+        tableView.getColumns().addAll(maschineNrColumn, maschineBez, kostensatzColumn);
         tab.setContent(tableView);
         tabPane.getTabs().add(tab);
     }
-    public static void createTabWithResult(TabPane tabPane, List<CsvResult> data){
+
+    public static void createTabWithResult(TabPane tabPane, List<CsvResult> data) {
         Tab tab = new Tab("Ergebnis");
         TableView<CsvResult> tableView = new TableView<>();
         tableView.setItems(javafx.collections.FXCollections.observableArrayList(data));
