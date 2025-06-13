@@ -45,8 +45,11 @@ public class TabHelper {
             return new javafx.beans.property.SimpleStringProperty(ende);
         });
 
+        TableColumn<CsvColumn, Integer> teilIdColumn = new TableColumn<>("Teil ID");
+        teilIdColumn.setCellValueFactory(new PropertyValueFactory<>("teilId"));
+
         // Füge Spalten zur TableView hinzu
-        tableView.getColumns().addAll(maschineColumn, datumColumn, beginnColumn, endeColumn);
+        tableView.getColumns().addAll(teilIdColumn, maschineColumn, datumColumn, beginnColumn, endeColumn);
 
         // Füge die TableView zum Tab hinzu
         tab.setContent(tableView);

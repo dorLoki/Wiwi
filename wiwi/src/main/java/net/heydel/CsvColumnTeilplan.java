@@ -28,4 +28,14 @@ public class CsvColumnTeilplan {
     public int getAnzahl() {
         return anzahl;
     }
+
+    // if knoten starts with 'A' true, otherwise false
+    public boolean isEndKnoten() {
+        try {
+            Integer.parseInt(knoten);
+        } catch (NumberFormatException e) {
+            return true;
+        }
+        return false;
+    }
 }

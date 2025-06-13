@@ -4,9 +4,11 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javafx.fxml.FXML;
@@ -139,7 +141,7 @@ public class MainController {
         // Container für zusätzliche Zeitraumauswahl
         HBox timeSelectionBox = new HBox(10);
         ComboBox<Integer> yearComboBox = new ComboBox<>();
-        IntStream.rangeClosed(2014, 2024).forEach(yearComboBox.getItems()::add);
+        IntStream.rangeClosed(2025, 2100).forEach(yearComboBox.getItems()::add);
         ComboBox<String> quarterComboBox = new ComboBox<>();
         quarterComboBox.getItems().addAll("1. Quartal", "2. Quartal", "3. Quartal", "4. Quartal");
         ComboBox<String> monthComboBox = new ComboBox<>();
@@ -426,13 +428,14 @@ public class MainController {
         return result;
     }
 
-    private void calcAblaufplan(HashMap<String, Object> result) {
-        List<CsvColumArbeitsplan> arbeitsplanList = csvColumnArbeitspläne.get(result.get("Arbeitsplan"));
-        List<CsvColumnTeilplan> teilplanList = csvColumnTeilpläne.get(result.get("Teilplan"));
+    private void calcAblaufplan(HashMap<String, Object> input) {
+        List<CsvColumArbeitsplan> arbeitsplanList = csvColumnArbeitspläne.get(input.get("Arbeitsplan"));
+        List<CsvColumnTeilplan> teilplanList = csvColumnTeilpläne.get(input.get("Teilplan"));
 
-        // calc
-        for (CsvColumnTeilplan csvColumnTeilplan : teilplanList) {
-            int anzahl = csvColumnTeilplan.getAnzahl();
-        }
+        AblaufPlanCalculator ablaufPlanCalculator = new AblaufPlanCalculator(arbeitsplanList, teilplanList);
+
+        List<CsvColumn> result = ablaufPlanCalculator.calc();
+        TabHelper.createTabWithTable(tabPane, "Ablaufplan", result);
+        csvColumns.put("Ablaufplan", result);
     }
 }
