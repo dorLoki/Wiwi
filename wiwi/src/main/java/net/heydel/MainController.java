@@ -118,14 +118,14 @@ public class MainController {
         grid.setVgap(10);
 
         // Auswahl der Sätze Datei
-        Label labelSaetze = new Label("Sätze-Datei:");
+        Label labelSaetze = new Label("Maschinensätze:");
         ComboBox<String> comboSaetze = new ComboBox<>();
         comboSaetze.getItems().addAll(csvColumnSaetze.keySet());
         grid.add(labelSaetze, 0, 0);
         grid.add(comboSaetze, 1, 0);
 
         // Auswahl der Ist-Daten Datei
-        Label labelIstDaten = new Label("Ist-Daten Datei:");
+        Label labelIstDaten = new Label("Ablaufplan:");
         ComboBox<String> comboIstDaten = new ComboBox<>();
         comboIstDaten.getItems().addAll(csvColumns.keySet());
         grid.add(labelIstDaten, 0, 1);
@@ -398,7 +398,7 @@ public class MainController {
         grid.add(comboTeilpläne, 1, 0);
 
         // Auswahl der Ist-Daten Datei
-        Label labelArbeitsplan = new Label("Arbeitsplan");
+        Label labelArbeitsplan = new Label("Ablaufplan");
         ComboBox<String> comboArbeitspläne = new ComboBox<>();
         comboArbeitspläne.getItems().addAll(csvColumnArbeitspläne.keySet());
         grid.add(labelArbeitsplan, 0, 1);
