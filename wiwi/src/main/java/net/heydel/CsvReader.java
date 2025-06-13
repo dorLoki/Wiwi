@@ -37,6 +37,20 @@ public class CsvReader {
                     }
                     return records;
                 }
+                if (line.equals("teil_id;ag_nr;maschine;dauer (min)")) {
+                    List<CsvColumArbeitsplan> records = new ArrayList<>();
+                    while ((line = br.readLine()) != null) {
+                        parseCsvArbeitsplan(records, line);
+                    }
+                    return records;
+                }
+                if (line.equals("teil_id;teil_nr;knoten;K_mat;K_fert;Anzahl;Mat")) {
+                    List<CsvColumnTeilplan> records = new ArrayList<>();
+                    while ((line = br.readLine()) != null) {
+                        parseCsvTeilplan(records, line);
+                    }
+                    return records;
+                }
             }
 
         } catch (IOException e) {
@@ -74,6 +88,29 @@ public class CsvReader {
             } catch (ParseException e) {
                 System.err.println("Fehler beim Parsen der Daten: " + e.getMessage());
             }
+        }
+    }
+
+    private void parseCsvArbeitsplan(List<CsvColumArbeitsplan> records, String line) {
+        String[] values = line.split(";");
+        if (values.length == 4) {
+            CsvColumArbeitsplan column = new CsvColumArbeitsplan(Integer.parseInt(values[0]),
+                    Integer.parseInt(values[1]), Integer.parseInt(values[2]), Integer.parseInt(values[3]));
+            records.add(column);
+
+        }
+    }
+
+    private void parseCsvTeilplan(List<CsvColumnTeilplan> records, String line) {
+        String[] values = line.split(";");
+        if (values.length == 7) {
+            CsvColumnTeilplan column = new CsvColumnTeilplan(
+                    Integer.parseInt(values[0]),
+                    Integer.parseInt(values[1]),
+                    values[2],
+                    Integer.parseInt(values[5]));
+            records.add(column);
+
         }
     }
 }

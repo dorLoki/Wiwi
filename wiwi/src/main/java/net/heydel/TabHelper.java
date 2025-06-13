@@ -74,6 +74,50 @@ public class TabHelper {
         tabPane.getTabs().add(tab);
     }
 
+    public static void createTabWithArbeitsplan(TabPane tabPane, String tabTitle, List<CsvColumArbeitsplan> data) {
+        Tab tab = new Tab(tabTitle);
+        TableView<CsvColumArbeitsplan> tableView = new TableView<>();
+        tableView.setItems(javafx.collections.FXCollections.observableArrayList(data));
+
+        TableColumn<CsvColumArbeitsplan, Integer> teil_idColumn = new TableColumn<>("teil_id");
+        teil_idColumn.setCellValueFactory(new PropertyValueFactory<>("teil_id"));
+
+        TableColumn<CsvColumArbeitsplan, Integer> ag_nrColumn = new TableColumn<>("ag_nr");
+        ag_nrColumn.setCellValueFactory(new PropertyValueFactory<>("ag_nr"));
+
+        TableColumn<CsvColumArbeitsplan, Integer> maschineColumn = new TableColumn<>("maschine");
+        maschineColumn.setCellValueFactory(new PropertyValueFactory<>("maschine"));
+
+        TableColumn<CsvColumArbeitsplan, Integer> dauerColumn = new TableColumn<>("dauer(min)");
+        dauerColumn.setCellValueFactory(new PropertyValueFactory<>("dauer"));
+
+        tableView.getColumns().addAll(teil_idColumn, ag_nrColumn, maschineColumn, dauerColumn);
+        tab.setContent(tableView);
+        tabPane.getTabs().add(tab);
+    }
+
+    public static void createTabWithTeilPlan(TabPane tabPane, String tabTitle, List<CsvColumnTeilplan> data) {
+        Tab tab = new Tab(tabTitle);
+        TableView<CsvColumnTeilplan> tableView = new TableView<>();
+        tableView.setItems(javafx.collections.FXCollections.observableArrayList(data));
+
+        TableColumn<CsvColumnTeilplan, Integer> teil_idColumn = new TableColumn<>("teil_id");
+        teil_idColumn.setCellValueFactory(new PropertyValueFactory<>("teil_id"));
+
+        TableColumn<CsvColumnTeilplan, Integer> teil_nrColumn = new TableColumn<>("teil_nr");
+        teil_nrColumn.setCellValueFactory(new PropertyValueFactory<>("teil_nr"));
+
+        TableColumn<CsvColumnTeilplan, String> knotenColumn = new TableColumn<>("knoten");
+        knotenColumn.setCellValueFactory(new PropertyValueFactory<>("knoten"));
+
+        TableColumn<CsvColumnTeilplan, Integer> anzahColumn = new TableColumn<>("Anzahl");
+        anzahColumn.setCellValueFactory(new PropertyValueFactory<>("Anzahl"));
+
+        tableView.getColumns().addAll(teil_idColumn, teil_nrColumn, knotenColumn, anzahColumn);
+        tab.setContent(tableView);
+        tabPane.getTabs().add(tab);
+    }
+
     public static void createTabWithResult(TabPane tabPane, List<CsvResult> data) {
         Tab tab = new Tab("Ergebnis");
         TableView<CsvResult> tableView = new TableView<>();

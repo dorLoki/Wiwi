@@ -35,12 +35,17 @@ public class MainController {
     private MenuItem menuCalcFile;
 
     @FXML
+    private MenuItem menuCalcFilePlan;
+
+    @FXML
     private TabPane tabPane;
 
     private Stage primaryStage;
 
     private HashMap<String, List<CsvColumn>> csvColumns = new HashMap<>();
     private HashMap<String, List<CsvColumnSatz>> csvColumnSaetze = new HashMap<>();
+    private HashMap<String, List<CsvColumArbeitsplan>> csvColumnArbeitspläne = new HashMap<>();
+    private HashMap<String, List<CsvColumnTeilplan>> csvColumnTeilpläne = new HashMap<>();
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -61,10 +66,19 @@ public class MainController {
                     // create a new tab with the content of the file CsvColumn
                     TabHelper.createTabWithTable(tabPane, file.getName(), (List<CsvColumn>) test);
                     csvColumns.put(file.getName(), (List<CsvColumn>) test);
+
                 } else if (test.get(0) instanceof CsvColumnSatz) {
                     // create a new tab with the content of the file
                     TabHelper.createTabWithTableSatz(tabPane, file.getName(), (List<CsvColumnSatz>) test);
                     csvColumnSaetze.put(file.getName(), (List<CsvColumnSatz>) test);
+
+                } else if (test.get(0) instanceof CsvColumArbeitsplan) {
+                    TabHelper.createTabWithArbeitsplan(tabPane, file.getName(), (List<CsvColumArbeitsplan>) test);
+                    csvColumnArbeitspläne.put(file.getName(), (List<CsvColumArbeitsplan>) test);
+
+                } else if (test.get(0) instanceof CsvColumnTeilplan) {
+                    TabHelper.createTabWithTeilPlan(tabPane, file.getName(), (List<CsvColumnTeilplan>) test);
+                    csvColumnTeilpläne.put(file.getName(), (List<CsvColumnTeilplan>) test);
                 }
             } else {
                 // show error message
@@ -361,5 +375,64 @@ public class MainController {
             results.add(res);
         }
         TabHelper.createTabWithResult(tabPane, results);
+    }
+
+    @FXML
+    void doCalcFilePlan() {
+        // Dialogfenster erstellen
+        Dialog<HashMap<String, Object>> dialog = new Dialog<>();
+        dialog.setTitle("Berechnung konfigurieren");
+
+        // GridPane für Layout
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        // Auswahl der Sätze Datei
+        Label labelTeilplan = new Label("Teilplan:");
+        ComboBox<String> comboTeilpläne = new ComboBox<>();
+        comboTeilpläne.getItems().addAll(csvColumnTeilpläne.keySet());
+        grid.add(labelTeilplan, 0, 0);
+        grid.add(comboTeilpläne, 1, 0);
+
+        // Auswahl der Ist-Daten Datei
+        Label labelArbeitsplan = new Label("Arbeitsplan");
+        ComboBox<String> comboArbeitspläne = new ComboBox<>();
+        comboArbeitspläne.getItems().addAll(csvColumnArbeitspläne.keySet());
+        grid.add(labelArbeitsplan, 0, 1);
+        grid.add(comboArbeitspläne, 1, 1);
+
+        Button calculateButton = new Button("Berechnen");
+        calculateButton.setOnAction(event -> {
+            // Berechnung starten, Ergebnisse verarbeiten
+            dialog.setResult(convertSelectionToMapAblaufPlan(comboArbeitspläne, comboTeilpläne));
+            dialog.close();
+        });
+        grid.add(calculateButton, 1, 4);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.showAndWait().ifPresent(result -> {
+            // Ergebnis verarbeiten
+            System.out.println("Ausgewählte Konfiguration: " + result);
+            calcAblaufplan(result);
+        });
+    }
+
+    private HashMap<String, Object> convertSelectionToMapAblaufPlan(ComboBox<String> comboArbeitspläne,
+            ComboBox<String> comboTeilpläne) {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("Arbeitsplan", comboArbeitspläne.getSelectionModel().getSelectedItem());
+        result.put("Teilplan", comboTeilpläne.getSelectionModel().getSelectedItem());
+        return result;
+    }
+
+    private void calcAblaufplan(HashMap<String, Object> result) {
+        List<CsvColumArbeitsplan> arbeitsplanList = csvColumnArbeitspläne.get(result.get("Arbeitsplan"));
+        List<CsvColumnTeilplan> teilplanList = csvColumnTeilpläne.get(result.get("Teilplan"));
+
+        // calc
+        for (CsvColumnTeilplan csvColumnTeilplan : teilplanList) {
+            int anzahl = csvColumnTeilplan.getAnzahl();
+        }
     }
 }

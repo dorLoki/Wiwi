@@ -53,9 +53,10 @@
             <MenuItem fx:id="menuQuit" mnemonicParsing="false" onAction="#doQuit" text="Beenden" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Berechnen">
+        <Menu mnemonicParsing="false" text="Berechnungen">
           <items>
-            <MenuItem fx:id="menuCalcFile" mnemonicParsing="false" onAction="#doCalcFile" text="Ausführen" />
+            <MenuItem fx:id="menuCalcFile" mnemonicParsing="false" onAction="#doCalcFile" text="Kostenstellung" />
+            <MenuItem fx:id="menuCalcFilePlan" mnemonicParsing="false" onAction="#doCalcFilePlan" text="Ablaufplan" />
           </items>
         </Menu>
       </menus>
