@@ -159,7 +159,8 @@ public class AblaufPlanCalculator {
         CsvColumn firstEntry = onlyGivenMaschine.get(0);
         LocalDateTime endTime = currentTime.plusMinutes(time);
         // there is a timespot between t0 and the first entry
-        if (endTime.isBefore(toLocalDateTime(firstEntry.getBeginnDerFertigung()))) {
+        if (endTime.isBefore(toLocalDateTime(firstEntry.getBeginnDerFertigung()))
+                || endTime.isEqual(toLocalDateTime(firstEntry.getBeginnDerFertigung()))) {
             CsvColumn entry = new CsvColumn(
                     maschine,
                     toDate(currentTime),
@@ -181,13 +182,13 @@ public class AblaufPlanCalculator {
                         newEnd = naechsterArbeitstag(newEnd.toLocalDate());
                         newEnd.plusMinutes(time);
 
-                        if (newEnd.isBefore(b_begin)) {
+                        if (newEnd.isBefore(b_begin) || newEnd.isEqual(b_begin)) {
                             return a; // time frame is big enough
                         }
                         return b; // time frame is to small
                     }
                     // check if process ends befor beginning of b
-                    if (newEnd.isBefore(b_begin)) {
+                    if (newEnd.isBefore(b_begin) || newEnd.isEqual(b_begin)) {
                         return a; // time frame is big enough
                     } else {
                         return b; // time frame is to small
