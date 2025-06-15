@@ -391,14 +391,14 @@ public class MainController {
         grid.setVgap(10);
 
         // Auswahl der Sätze Datei
-        Label labelTeilplan = new Label("Teilplan:");
+        Label labelTeilplan = new Label("Teile:");
         ComboBox<String> comboTeilpläne = new ComboBox<>();
         comboTeilpläne.getItems().addAll(csvColumnTeilpläne.keySet());
         grid.add(labelTeilplan, 0, 0);
         grid.add(comboTeilpläne, 1, 0);
 
         // Auswahl der Ist-Daten Datei
-        Label labelArbeitsplan = new Label("Ablaufplan");
+        Label labelArbeitsplan = new Label("Arbeitsplan");
         ComboBox<String> comboArbeitspläne = new ComboBox<>();
         comboArbeitspläne.getItems().addAll(csvColumnArbeitspläne.keySet());
         grid.add(labelArbeitsplan, 0, 1);
