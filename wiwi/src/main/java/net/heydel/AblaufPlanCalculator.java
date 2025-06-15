@@ -170,8 +170,11 @@ public class AblaufPlanCalculator {
             lastTime = endTime;
             return;
         }
+        final var currentTime_ = currentTime;
         // else check for spots
-        CsvColumn entry = onlyGivenMaschine.stream()
+        var opt_entry = onlyGivenMaschine.stream()
+                .filter(a -> toLocalDateTime(a.getEndeDerFertigung()).isAfter(currentTime_)
+                        || toLocalDateTime(a.getEndeDerFertigung()).isEqual(currentTime_))
                 .reduce((a, b) -> {
                     var a_end = toLocalDateTime(a.getEndeDerFertigung());
                     var b_begin = toLocalDateTime(b.getBeginnDerFertigung());
@@ -180,7 +183,7 @@ public class AblaufPlanCalculator {
                     if (newEnd.toLocalTime().isAfter(LocalTime.of(16, 0))) {
                         // get next working day
                         newEnd = naechsterArbeitstag(newEnd.toLocalDate());
-                        newEnd.plusMinutes(time);
+                        newEnd = newEnd.plusMinutes(time);
 
                         if (newEnd.isBefore(b_begin) || newEnd.isEqual(b_begin)) {
                             return a; // time frame is big enough
@@ -193,16 +196,34 @@ public class AblaufPlanCalculator {
                     } else {
                         return b; // time frame is to small
                     }
-                }).get();
+                });
 
-        var entry_end = toLocalDateTime(entry.getEndeDerFertigung());
-        var newEnd = entry_end.plusMinutes(time);
-        if (newEnd.toLocalTime().isAfter(LocalTime.of(16, 0))) {
-            entry_end = naechsterArbeitstag(newEnd.toLocalDate());
-            newEnd = entry_end.plusMinutes(time);
+        if (opt_entry.isPresent()) {
+            var entry = opt_entry.get();
+            var entry_end = toLocalDateTime(entry.getEndeDerFertigung());
+            var newEnd = entry_end.plusMinutes(time);
+            if (newEnd.toLocalTime().isAfter(LocalTime.of(16, 0))) {
+                entry_end = naechsterArbeitstag(newEnd.toLocalDate());
+                newEnd = entry_end.plusMinutes(time);
+            }
+            CsvColumn entry2 = new CsvColumn(maschine, toDate(entry_end), toDate(newEnd), teilId);
+            result.add(entry2);
+            lastTime = newEnd;
+        } else {
+            var new_begin = currentTime;
+            var test = onlyGivenMaschine.stream().max(Comparator.comparing(CsvColumn::getEndeDerFertigung)).get();
+            if (new_begin.isBefore(toLocalDateTime(test.getEndeDerFertigung()))) {
+                new_begin = toLocalDateTime(test.getEndeDerFertigung());
+            }
+            var new_end = currentTime.plusMinutes(time);
+            if (new_end.toLocalTime().isAfter(LocalTime.of(16, 0))) {
+                new_begin = naechsterArbeitstag(new_end.toLocalDate());
+                new_end = new_begin.plusMinutes(time);
+
+            }
+            CsvColumn entry3 = new CsvColumn(maschine, toDate(new_begin), toDate(new_end), teilId);
+            result.add(entry3);
+            lastTime = new_end;
         }
-        CsvColumn entry2 = new CsvColumn(maschine, toDate(entry_end), toDate(newEnd), teilId);
-        result.add(entry2);
-        lastTime = newEnd;
     }
 }
